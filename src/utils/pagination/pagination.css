@@ -1,0 +1,31 @@
+.pagination {
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  margin: 2em;
+  padding: 0;
+}
+
+.pagination li {
+  margin: 0 5px; /* Adjust the spacing between page buttons */
+}
+
+.pagination button {
+  text-decoration: none;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  background-color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination button:hover {
+  background-color: #f2f2f2;
+}
+
+.pagination .active button {
+  background-color: #007bff;
+  color: #fff;
+}
