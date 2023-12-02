@@ -1,5 +1,5 @@
 import "./App.css";
-import MyFlatList from "./component/admindashboard/admindashboard";
+import MyTable from "./component/admindashboard/admindashboard";
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <MyFlatList />
+      <MyTable />
     </div>
   );
 }

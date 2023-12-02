@@ -1,0 +1,17 @@
+.custom-dialog {
+  width: 35% !important;
+  max-height: 31vh;
+  margin: auto;
+  margin-left: 40% !important;
+  margin-top: 12% !important;
+}
+
+.custom-dialog .header {
+  background-color: #db2828;
+  color: white;
+  text-align: left;
+}
+
+.custom-dialog .content {
+  text-align: left;
+}

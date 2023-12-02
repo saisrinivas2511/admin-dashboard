@@ -24,18 +24,81 @@ tr.selected-row {
   background-color: "#f2f2f2";
 }
 .delete-button {
-  background-color: #dc3545; /* Use your preferred color for delete button */
+  background-color: #dc3545;
   color: #fff;
   border: none;
   padding: 8px;
   border-top-left-radius: 4px; /* Match the border radius of search button */
-  border-bottom-left-radius: 4px; /* Match the border radius of search button */
-  border-top-right-radius: 4px; /* Match the border radius of search button */
-  border-bottom-right-radius: 4px; /* Match the border radius of search button */
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
   cursor: pointer;
   margin-top: 3%;
   position: absolute;
   right: 10em;
 }
 
-/* Add the appropriate margin and positioning for the delete button */
+.deleteSelectedRow {
+  background-color: #dc3545;
+  color: #fff; /* Use your preferred color for delete button */
+  border: none;
+  padding: 8px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  cursor: pointer;
+  margin-top: 3em;
+  margin-left: 10em;
+}
+
+.deleteRow {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  margin-left: 2em;
+}
+
+.edit-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px;
+  border-top-left-radius: 4px; /* Match the border radius of search button */
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  cursor: pointer;
+  margin-left: 2em;
+}
+
+.saveEdit {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px;
+  border-top-left-radius: 4px; /* Match the border radius of search button */
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  cursor: pointer;
+  margin-left: 2em;
+}
+
+.cancelEdit {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px;
+  border-top-left-radius: 4px; /* Match the border radius of search button */
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  cursor: pointer;
+  margin-left: 2em;
+}
