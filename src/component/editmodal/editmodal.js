@@ -1,62 +1,79 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { Modal } from "semantic-ui-react";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import "./editModal.css";
 
-const EditModal = ({
-  editedName,
-  setEditedName,
-  editedEmail,
-  setEditedEmail,
-  editedRole,
-  setEditedRole,
-  handleSaveEdit,
-  handleCancelEdit,
-}) => {
+const EditDialogBox = (props) => {
+  const { onClose, onSave, initialValues } = props;
+
+  // State to manage the edited values
+  const [editedName, setEditedName] = useState(initialValues.name || "");
+  const [editedEmail, setEditedEmail] = useState(initialValues.email || "");
+  const [editedRole, setEditedRole] = useState(initialValues.role || "");
+
   return (
-    <Modal open={true}>
-      <Modal.Header>Edit User Data</Modal.Header>
-      <Modal.Content>
-        <div className="edit-modal">
-          <div>
-            <label>Name:</label>
+    <>
+      <div className="darkBG" onClick={onClose} />
+      <div className="centered">
+        <div className="editModal">
+          <div className="modalHeader">
+            <h5 className="heading">Edit Item</h5>
+          </div>
+          <button className="closeBtn" onClick={onClose}>
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+          <div className="editModalContent">
+            {/* Editable fields */}
+            <label htmlFor="editedName">Name:</label>
             <input
               type="text"
-              placeholder="Name"
+              className="editedName"
+              name="editedName"
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
             />
-          </div>
-          <div>
-            <label>Email:</label>
+
+            <label htmlFor="editedEmail">Email:</label>
             <input
               type="text"
-              placeholder="Email"
+              className="editedEmail"
+              name="editedEmail"
               value={editedEmail}
               onChange={(e) => setEditedEmail(e.target.value)}
             />
-          </div>
-          <div>
-            <label>Role:</label>
+
+            <label htmlFor="editedRole">Role:</label>
             <input
               type="text"
-              placeholder="Role"
+              className="editedRole"
+              name="editedRole"
               value={editedRole}
               onChange={(e) => setEditedRole(e.target.value)}
             />
           </div>
+          <div className="editModalActions">
+            <div className="actionsContainer">
+              <button className="cancelBtn" onClick={onClose}>
+                Cancel
+              </button>
+              <button
+                className="saveBtn"
+                onClick={() =>
+                  onSave({
+                    name: editedName,
+                    email: editedEmail,
+                    role: editedRole,
+                  })
+                }
+              >
+                Save
+              </button>
+            </div>
+          </div>
         </div>
-      </Modal.Content>
-      <Modal.Actions>
-        <button className="saveEdit" onClick={handleSaveEdit}>
-          <FontAwesomeIcon icon={faSave} /> Save
-        </button>
-        <button className="cancelEdit" onClick={handleCancelEdit}>
-          <FontAwesomeIcon icon={faTimes} /> Cancel
-        </button>
-      </Modal.Actions>
-    </Modal>
+      </div>
+    </>
   );
 };
 
-export default EditModal;
+export default EditDialogBox;

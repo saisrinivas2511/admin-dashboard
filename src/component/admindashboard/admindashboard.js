@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Pagination from "../../utils/pagination/pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
-import {
-  faSearch,
-  faTrash,
-  faEdit,
-  faSave,
-  faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import "./admindashboard.css";
+import DeleteDialogBox from "../deleteDialogBox/deleteDialogBox";
+import EditDialogBox from "../editModal/editModal";
+
 const MyTable = () => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,10 +15,13 @@ const MyTable = () => {
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedRole, setEditedRole] = useState("");
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [selectAll, setSelectAll] = useState(false);
 
   const itemsPerPage = 10;
 
-  const handleSearch = () => {
+  const handleSearch = () => {  
     // Fetch data based on the search term
     fetch(
       "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json"
@@ -69,6 +68,12 @@ const MyTable = () => {
       setSelectedRows([...selectedRows, rowId]);
     }
   };
+  const handleSelectAllChange = () => {
+    // If selectAll is false, select all rows in the current page; otherwise, clear selected rows
+    setSelectedRows(selectAll ? [] : currentData.map((item) => item.id));
+    setSelectAll(!selectAll);
+  };
+
   const handleDeleteRow = (rowId) => {
     // Filter out the row with the specified ID
     const updatedData = data.filter((item) => item.id !== rowId);
@@ -77,53 +82,73 @@ const MyTable = () => {
     setSelectedRows(selectedRows.filter((id) => id !== rowId));
   };
 
-  const handleBulkDelete = () => {
-    //clearing the entire data
-    setData([]);
-  };
-
   const handleDeleteSelectedRows = () => {
     // Filter out the selected rows from the data
     const updatedData = data.filter((item) => !selectedRows.includes(item.id));
     setData(updatedData);
     // Clear the selected rows
     setSelectedRows([]);
+    setOpenDeleteModal(false);
   };
   const handleEditRow = (rowId) => {
     setEditRowId(rowId);
+    setOpenEditModal(true); // Open the EditDialogBox
     // Fetch the current row's data and set it to state
     const currentRow = data.find((item) => item.id === rowId);
     setEditedName(currentRow.name);
     setEditedEmail(currentRow.email);
     setEditedRole(currentRow.role);
   };
-  const handleSaveEdit = () => {
+  const handleSaveEdit = (editedData) => {
     // Update the data with the edited information
     const updatedData = data.map((item) => {
       if (item.id === editRowId) {
         return {
           ...item,
-          name: editedName,
-          email: editedEmail,
-          role: editedRole,
+          name: editedData.name,
+          email: editedData.email,
+          role: editedData.role,
         };
       }
       return item;
     });
+
     setData(updatedData);
     setEditRowId(null);
+    setOpenEditModal(false);
   };
 
-  const handleCancelEdit = () => {
-    // Clear the edited information and reset the editRowId
-    setEditedName("");
-    setEditedEmail("");
-    setEditedRole("");
+  const handleConfirmDelete = () => {
+    setOpenDeleteModal(true);
+  };
+  const handleCancelDelete = () => {
+    setOpenDeleteModal(false);
+  };
+
+  const handleCloseEdit = () => {
     setEditRowId(null);
+    setOpenEditModal(false);
   };
 
   return (
     <>
+      {openDeleteModal && (
+        <DeleteDialogBox
+          onClose={handleCancelDelete}
+          onConfirm={handleDeleteSelectedRows}
+        />
+      )}
+      {openEditModal && (
+        <EditDialogBox
+          onClose={handleCloseEdit}
+          onSave={handleSaveEdit}
+          initialValues={{
+            name: editedName,
+            email: editedEmail,
+            role: editedRole,
+          }}
+        />
+      )}
       <div style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <div className="search-bar">
           <input
@@ -141,18 +166,33 @@ const MyTable = () => {
             <FontAwesomeIcon icon={faSearch} />
           </button>
         </div>
-        <div>
-          <button className="delete-button" onClick={handleBulkDelete}>
-            <FontAwesomeIcon icon={faTrash} />
-          </button>
-        </div>
+        {selectedRows.length > 0 ? (
+          <div>
+            <button className="delete-button" onClick={handleConfirmDelete}>
+              {console.log(
+                "this is the value of openDeleteModal",
+                openDeleteModal
+              )}
+              <FontAwesomeIcon icon={faTrash} />
+            </button>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
 
       <div className="adminPage" style={adminPageStyle}>
         <table style={{ borderCollapse: "collapse", width: "80%" }}>
           <thead>
             <tr>
-              <th style={tableCellStyle}></th>
+              <th style={tableCellStyle}>
+                {" "}
+                <input
+                  type="checkbox"
+                  checked={selectAll}
+                  onChange={handleSelectAllChange}
+                />
+              </th>
               <th style={tableCellStyle}>Name</th>
               <th style={tableCellStyle}>Email</th>
               <th style={tableCellStyle}>Role</th>
@@ -180,49 +220,20 @@ const MyTable = () => {
                 <td style={tableCellStyle}>{item.email}</td>
                 <td style={tableCellStyle}>{item.role}</td>
                 <td style={tableCellStyle}>
-                  {editRowId === item.id ? (
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Name"
-                        value={editedName}
-                        onChange={(e) => setEditedName(e.target.value)}
-                      />
-                      <input
-                        type="text"
-                        placeholder="Email"
-                        value={editedEmail}
-                        onChange={(e) => setEditedEmail(e.target.value)}
-                      />
-                      <input
-                        type="text"
-                        placeholder="Role"
-                        value={editedRole}
-                        onChange={(e) => setEditedRole(e.target.value)}
-                      />
-                      <button className="saveEdit" onClick={handleSaveEdit}>
-                        <FontAwesomeIcon icon={faSave} />
-                      </button>
-                      <button className="cancelEdit" onClick={handleCancelEdit}>
-                        <FontAwesomeIcon icon={faTimes} />
-                      </button>
-                    </div>
-                  ) : (
-                    <div>
-                      <button
-                        className="edit-button"
-                        onClick={() => handleEditRow(item.id)}
-                      >
-                        <FontAwesomeIcon icon={faEdit} />
-                      </button>
-                      <button
-                        className="deleteRow"
-                        onClick={() => handleDeleteRow(item.id)}
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                    </div>
-                  )}
+                  <div>
+                    <button
+                      className="edit-button"
+                      onClick={() => handleEditRow(item.id)}
+                    >
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                    <button
+                      className="deleteRow"
+                      onClick={() => handleDeleteRow(item.id)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -230,32 +241,12 @@ const MyTable = () => {
         </table>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        {selectedRows.length > 0 ? (
-          <div>
-            <button
-              className="deleteSelectedRow"
-              onClick={handleDeleteSelectedRows}
-            >
-              <FontAwesomeIcon icon={faTrash} />
-            </button>
-          </div>
-        ) : (
-          <div></div>
-        )}
-        <div>
-          <Pagination
-            data={data}
-            itemsPerPage={itemsPerPage}
-            paginate={paginate}
-          />
-        </div>
+      <div>
+        <Pagination
+          data={data}
+          itemsPerPage={itemsPerPage}
+          paginate={paginate}
+        />
       </div>
     </>
   );
