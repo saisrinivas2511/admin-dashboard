@@ -42,13 +42,13 @@ const Pagination = ({ data, itemsPerPage, paginate }) => {
   return (
     <nav>
       <ul className="pagination">
-        <li className="page-item">
-          <button onClick={handleFirstPage} className="page-link">
+        <li className="firstPage">
+          <button onClick={handleFirstPage} className="firstPage-link">
             <FontAwesomeIcon icon={faAngleDoubleLeft} />
           </button>
         </li>
-        <li className="page-item">
-          <button onClick={handlePrevPage} className="page-link">
+        <li className="previousPage">
+          <button onClick={handlePrevPage} className="previousPage-link">
             <FontAwesomeIcon icon={faAngleLeft} />
           </button>
         </li>
@@ -66,13 +66,13 @@ const Pagination = ({ data, itemsPerPage, paginate }) => {
             </button>
           </li>
         ))}
-        <li className="page-item">
-          <button onClick={handleNextPage} className="page-link">
+        <li className="nextPage">
+          <button onClick={handleNextPage} className="nextPage-link">
             <FontAwesomeIcon icon={faAngleRight} />
           </button>
         </li>
-        <li className="page-item">
-          <button onClick={handleLastPage} className="page-link">
+        <li className="lastPage">
+          <button onClick={handleLastPage} className="lastPage-link">
             <FontAwesomeIcon icon={faAngleDoubleRight} />
           </button>
         </li>
